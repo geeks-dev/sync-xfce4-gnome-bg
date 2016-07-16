@@ -1,0 +1,8 @@
+[Unit]
+Description=Sync xfconf's background to gnome background on dconf
+
+[Path]
+PathChanged=%h/.config/xfce4/xfconf/xfce-perchannel-xml/xfce4-desktop.xml
+
+[Install]
+WantedBy=default.target

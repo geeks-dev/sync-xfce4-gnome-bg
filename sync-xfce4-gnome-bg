@@ -1,0 +1,76 @@
+#!/bin/sh
+
+
+background=file://$(xfconf-query -c xfce4-desktop -p /backdrop/screen0/monitor0/workspace0/last-image)
+
+background_style=$(xfconf-query -c xfce4-desktop -p /backdrop/screen0/monitor0/workspace0/image-style)
+
+case $background_style in
+    "0" )
+    #xfce None
+        background_mode=none;;
+    "1" )
+    #xfce Centered
+        background_mode=centered;;
+    "2" )
+    #xfce Tiled
+        background_mode=wallpaper;;
+    "3" )
+    #xfce Stretched
+        background_mode=stretched;;
+    "4" )
+    #xfce Scaled
+        background_mode=scaled;;
+    "5" )
+    #xfce Zoomed
+        background_mode=zoom;;
+esac
+
+color_style=$(xfconf-query -c xfce4-desktop -p /backdrop/screen0/monitor0/workspace0/color-style)
+
+case $color_style in
+    "0" )
+    #xfce soid
+        color_type=solid;;
+    "1" )
+    #xfce horizontal
+        color_type=horizontal;;
+    "2" )
+    #xfce vertical
+        color_type=vertical;;
+esac
+
+
+xfconf-query -c xfce4-desktop -p /backdrop/screen0/monitor0/workspace0/color1 >/dev/null 2>&1;
+if [ "$?" -eq 0 ]; then
+
+    colors1=($(xfconf-query -c xfce4-desktop -p /backdrop/screen0/monitor0/workspace0/color1 | tail -4))
+    hexcolor1='#'
+    for ((i=0; i<3; i++)); do
+        tv=$(expr ${colors1[$i]} / 256)
+        hexcolor1=$hexcolor1`printf '%02x\n' $tv`
+    done
+
+else
+    hexcolor1='#000000'
+fi
+
+xfconf-query -c xfce4-desktop -p /backdrop/screen0/monitor0/workspace0/color2 >/dev/null 2>&1
+if [ "$?" -eq 0 ]; then
+
+    colors2=($(xfconf-query -c xfce4-desktop -p /backdrop/screen0/monitor0/workspace0/color2 | tail -4))
+    hexcolor2='#'
+    for ((i=0; i<3; i++)); do
+        tv=$(expr ${colors2[$i]} / 256)
+        hexcolor2=$hexcolor2`printf '%02x\n' $tv`
+    done
+
+else
+    hexcolor2='#000000'
+fi
+
+/usr/bin/gsettings set org.gnome.desktop.background picture-uri $background
+/usr/bin/gsettings set org.gnome.desktop.background picture-options $background_mode
+/usr/bin/gsettings set org.gnome.desktop.background color-shading-type $color_type
+/usr/bin/gsettings set org.gnome.desktop.background primary-color $hexcolor1
+/usr/bin/gsettings set org.gnome.desktop.background secondary-color $hexcolor2

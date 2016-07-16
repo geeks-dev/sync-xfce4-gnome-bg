@@ -1,0 +1,9 @@
+[Unit]
+Description=Sync xfconf's background to gnome background on dconf
+
+[Service]
+Type=oneshot
+ExecStart=/usr/bin/sync-xfce4-gnome-bg
+
+
+

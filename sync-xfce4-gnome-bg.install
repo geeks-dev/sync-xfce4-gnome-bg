@@ -1,0 +1,11 @@
+post_install(){
+    systemctl --global enable sync-xfce4-gnome-bg.path
+    echo 
+    echo 'Start from the next time you log in, please run the following command if you want to start in this session .'
+    echo '"systemctl --user start sync-xfce4-gnome-bg.path"'
+    echo 
+}
+
+pre_remove(){
+    systemctl --global disable sync-xfce4-gnome-bg.path
+}
